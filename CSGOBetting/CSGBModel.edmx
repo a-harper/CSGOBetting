@@ -1,0 +1,714 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="dbModel.Store" Provider="System.Data.SQLite.EF6" ProviderManifestToken="data source=C:\Users\aharper\Source\Repos\CSGOBetting\CSGOBetting\db.db" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="bet">
+          <Key>
+            <PropertyRef Name="betid" />
+          </Key>
+          <Property Name="betid" Type="integer" Nullable="false" />
+          <Property Name="matchid" Type="integer" Nullable="false" />
+          <Property Name="amount" Type="real" Nullable="false" />
+          <Property Name="teamid" Type="integer" Nullable="false" />
+          <Property Name="datetime" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+        </EntityType>
+        <EntityType Name="event">
+          <Key>
+            <PropertyRef Name="eventid" />
+          </Key>
+          <Property Name="eventid" Type="integer" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="startdate" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="enddate" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="match">
+          <Key>
+            <PropertyRef Name="matchid" />
+          </Key>
+          <Property Name="matchid" Type="integer" Nullable="false" />
+          <Property Name="matchstatsid" Type="integer" Nullable="false" />
+          <Property Name="csgolid" Type="integer" Nullable="false" />
+          <Property Name="team1id" Type="integer" Nullable="false" />
+          <Property Name="team2id" Type="integer" Nullable="false" />
+          <Property Name="roster1id" Type="integer" Nullable="false" />
+          <Property Name="roster2id" Type="integer" Nullable="false" />
+          <Property Name="matchstatus" Type="integer" Nullable="false" />
+          <Property Name="winner" Type="integer" />
+          <Property Name="datetime" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="eventid" Type="integer" />
+        </EntityType>
+        <EntityType Name="matchstatus">
+          <Key>
+            <PropertyRef Name="matchstatusid" />
+          </Key>
+          <Property Name="matchstatusid" Type="integer" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'main.odds' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="odds">
+          <Key>
+            <PropertyRef Name="matchid" />
+            <PropertyRef Name="team1odds" />
+            <PropertyRef Name="team2odds" />
+            <PropertyRef Name="sourceid" />
+          </Key>
+          <Property Name="matchid" Type="integer" Nullable="false" />
+          <Property Name="team1odds" Type="real" Nullable="false" />
+          <Property Name="team2odds" Type="real" Nullable="false" />
+          <Property Name="sourceid" Type="integer" Nullable="false" />
+        </EntityType>
+        <EntityType Name="oddssource">
+          <Key>
+            <PropertyRef Name="sourceid" />
+          </Key>
+          <Property Name="sourceid" Type="integer" Nullable="false" />
+          <Property Name="sourcename" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="sourceurl" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="player">
+          <Key>
+            <PropertyRef Name="playerid" />
+          </Key>
+          <Property Name="playerid" Type="integer" Nullable="false" />
+          <Property Name="hltvid" Type="integer" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="rating" Type="real" />
+          <Property Name="hsr" Type="real" />
+          <Property Name="kdr" Type="real" />
+        </EntityType>
+        <EntityType Name="roster">
+          <Key>
+            <PropertyRef Name="rosterid" />
+          </Key>
+          <Property Name="rosterid" Type="integer" Nullable="false" />
+          <Property Name="teamid" Type="integer" Nullable="false" />
+          <Property Name="lastplayed" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+        </EntityType>
+        <EntityType Name="rosterplayer">
+          <Key>
+            <PropertyRef Name="rosterid" />
+            <PropertyRef Name="playerid" />
+          </Key>
+          <Property Name="rosterid" Type="integer" Nullable="false" />
+          <Property Name="playerid" Type="integer" Nullable="false" />
+        </EntityType>
+        <EntityType Name="team">
+          <Key>
+            <PropertyRef Name="teamid" />
+          </Key>
+          <Property Name="teamid" Type="integer" Nullable="false" />
+          <Property Name="hltvteamid" Type="integer" />
+          <Property Name="teamname" Type="nvarchar" MaxLength="2147483647" Nullable="false" />
+          <Property Name="teamshortname" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <Association Name="FK_bet_0_0">
+          <End Role="match" Type="Self.match" Multiplicity="1" />
+          <End Role="bet" Type="Self.bet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="match">
+              <PropertyRef Name="matchid" />
+            </Principal>
+            <Dependent Role="bet">
+              <PropertyRef Name="matchid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_bet_1_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="bet" Type="Self.bet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="bet">
+              <PropertyRef Name="teamid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_0_0">
+          <End Role="event" Type="Self.event" Multiplicity="0..1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="event">
+              <PropertyRef Name="eventid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="eventid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_1_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="team2id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_2_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="team1id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_3_0">
+          <End Role="matchstatus" Type="Self.matchstatus" Multiplicity="1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="matchstatus">
+              <PropertyRef Name="matchstatusid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="matchstatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_odds_0_0">
+          <End Role="oddssource" Type="Self.oddssource" Multiplicity="1" />
+          <End Role="odds" Type="Self.odds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="oddssource">
+              <PropertyRef Name="sourceid" />
+            </Principal>
+            <Dependent Role="odds">
+              <PropertyRef Name="sourceid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_odds_1_0">
+          <End Role="match" Type="Self.match" Multiplicity="1" />
+          <End Role="odds" Type="Self.odds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="match">
+              <PropertyRef Name="matchid" />
+            </Principal>
+            <Dependent Role="odds">
+              <PropertyRef Name="matchid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_roster_0_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="roster" Type="Self.roster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="roster">
+              <PropertyRef Name="teamid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rosterplayer_0_0">
+          <End Role="roster" Type="Self.roster" Multiplicity="1" />
+          <End Role="rosterplayer" Type="Self.rosterplayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="roster">
+              <PropertyRef Name="rosterid" />
+            </Principal>
+            <Dependent Role="rosterplayer">
+              <PropertyRef Name="rosterid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rosterplayer_1_0">
+          <End Role="player" Type="Self.player" Multiplicity="1" />
+          <End Role="rosterplayer" Type="Self.rosterplayer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="player">
+              <PropertyRef Name="playerid" />
+            </Principal>
+            <Dependent Role="rosterplayer">
+              <PropertyRef Name="playerid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbModelStoreContainer">
+          <EntitySet Name="bet" EntityType="Self.bet" store:Type="Tables" />
+          <EntitySet Name="event" EntityType="Self.event" store:Type="Tables" />
+          <EntitySet Name="match" EntityType="Self.match" store:Type="Tables" />
+          <EntitySet Name="matchstatus" EntityType="Self.matchstatus" store:Type="Tables" />
+          <EntitySet Name="oddssource" EntityType="Self.oddssource" store:Type="Tables" />
+          <EntitySet Name="player" EntityType="Self.player" store:Type="Tables" />
+          <EntitySet Name="roster" EntityType="Self.roster" store:Type="Tables" />
+          <EntitySet Name="rosterplayer" EntityType="Self.rosterplayer" store:Type="Tables" />
+          <EntitySet Name="team" EntityType="Self.team" store:Type="Tables" />
+          <EntitySet Name="odds" EntityType="Self.odds" store:Type="Tables">
+            <DefiningQuery>SELECT 
+[odds].[matchid] AS [matchid], 
+[odds].[team1odds] AS [team1odds], 
+[odds].[team2odds] AS [team2odds], 
+[odds].[sourceid] AS [sourceid]
+FROM [odds] AS [odds]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_bet_0_0" Association="Self.FK_bet_0_0">
+            <End Role="match" EntitySet="match" />
+            <End Role="bet" EntitySet="bet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_bet_1_0" Association="Self.FK_bet_1_0">
+            <End Role="team" EntitySet="team" />
+            <End Role="bet" EntitySet="bet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_0_0" Association="Self.FK_match_0_0">
+            <End Role="event" EntitySet="event" />
+            <End Role="match" EntitySet="match" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_1_0" Association="Self.FK_match_1_0">
+            <End Role="team" EntitySet="team" />
+            <End Role="match" EntitySet="match" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_2_0" Association="Self.FK_match_2_0">
+            <End Role="team" EntitySet="team" />
+            <End Role="match" EntitySet="match" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_3_0" Association="Self.FK_match_3_0">
+            <End Role="matchstatus" EntitySet="matchstatus" />
+            <End Role="match" EntitySet="match" />
+          </AssociationSet>
+          <AssociationSet Name="FK_odds_0_0" Association="Self.FK_odds_0_0">
+            <End Role="oddssource" EntitySet="oddssource" />
+            <End Role="odds" EntitySet="odds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_odds_1_0" Association="Self.FK_odds_1_0">
+            <End Role="match" EntitySet="match" />
+            <End Role="odds" EntitySet="odds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_roster_0_0" Association="Self.FK_roster_0_0">
+            <End Role="team" EntitySet="team" />
+            <End Role="roster" EntitySet="roster" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rosterplayer_0_0" Association="Self.FK_rosterplayer_0_0">
+            <End Role="roster" EntitySet="roster" />
+            <End Role="rosterplayer" EntitySet="rosterplayer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rosterplayer_1_0" Association="Self.FK_rosterplayer_1_0">
+            <End Role="player" EntitySet="player" />
+            <End Role="rosterplayer" EntitySet="rosterplayer" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="bet">
+          <Key>
+            <PropertyRef Name="betid" />
+          </Key>
+          <Property Name="betid" Type="Int64" Nullable="false" />
+          <Property Name="matchid" Type="Int64" Nullable="false" />
+          <Property Name="amount" Type="Double" Nullable="false" />
+          <Property Name="teamid" Type="Int64" Nullable="false" />
+          <Property Name="datetime" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="match" Relationship="Self.FK_bet_0_0" FromRole="bet" ToRole="match" />
+          <NavigationProperty Name="team" Relationship="Self.FK_bet_1_0" FromRole="bet" ToRole="team" />
+        </EntityType>
+        <EntityType Name="event">
+          <Key>
+            <PropertyRef Name="eventid" />
+          </Key>
+          <Property Name="eventid" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="startdate" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="enddate" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="matches" Relationship="Self.FK_match_0_0" FromRole="event" ToRole="match" />
+        </EntityType>
+        <EntityType Name="match">
+          <Key>
+            <PropertyRef Name="matchid" />
+          </Key>
+          <Property Name="matchid" Type="Int64" Nullable="false" />
+          <Property Name="matchstatsid" Type="Int64" Nullable="false" />
+          <Property Name="csgolid" Type="Int64" Nullable="false" />
+          <Property Name="team1id" Type="Int64" Nullable="false" />
+          <Property Name="team2id" Type="Int64" Nullable="false" />
+          <Property Name="roster1id" Type="Int64" Nullable="false" />
+          <Property Name="roster2id" Type="Int64" Nullable="false" />
+          <Property Name="matchstatus" Type="Int64" Nullable="false" />
+          <Property Name="winner" Type="Int64" />
+          <Property Name="datetime" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="eventid" Type="Int64" />
+          <NavigationProperty Name="bets" Relationship="Self.FK_bet_0_0" FromRole="match" ToRole="bet" />
+          <NavigationProperty Name="event" Relationship="Self.FK_match_0_0" FromRole="match" ToRole="event" />
+          <NavigationProperty Name="team" Relationship="Self.FK_match_1_0" FromRole="match" ToRole="team" />
+          <NavigationProperty Name="team1" Relationship="Self.FK_match_2_0" FromRole="match" ToRole="team" />
+          <NavigationProperty Name="matchstatu" Relationship="Self.FK_match_3_0" FromRole="match" ToRole="matchstatus" />
+          <NavigationProperty Name="odds" Relationship="Self.FK_odds_1_0" FromRole="match" ToRole="odds" />
+        </EntityType>
+        <EntityType Name="matchstatu">
+          <Key>
+            <PropertyRef Name="matchstatusid" />
+          </Key>
+          <Property Name="matchstatusid" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="matches" Relationship="Self.FK_match_3_0" FromRole="matchstatus" ToRole="match" />
+        </EntityType>
+        <EntityType Name="oddssource">
+          <Key>
+            <PropertyRef Name="sourceid" />
+          </Key>
+          <Property Name="sourceid" Type="Int64" Nullable="false" />
+          <Property Name="sourcename" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="sourceurl" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="odds" Relationship="Self.FK_odds_0_0" FromRole="oddssource" ToRole="odds" />
+        </EntityType>
+        <EntityType Name="player">
+          <Key>
+            <PropertyRef Name="playerid" />
+          </Key>
+          <Property Name="playerid" Type="Int64" Nullable="false" />
+          <Property Name="hltvid" Type="Int64" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="rating" Type="Double" />
+          <Property Name="hsr" Type="Double" />
+          <Property Name="kdr" Type="Double" />
+          <NavigationProperty Name="rosters" Relationship="Self.rosterplayer" FromRole="player" ToRole="roster" />
+        </EntityType>
+        <EntityType Name="roster">
+          <Key>
+            <PropertyRef Name="rosterid" />
+          </Key>
+          <Property Name="rosterid" Type="Int64" Nullable="false" />
+          <Property Name="teamid" Type="Int64" Nullable="false" />
+          <Property Name="lastplayed" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="team" Relationship="Self.FK_roster_0_0" FromRole="roster" ToRole="team" />
+          <NavigationProperty Name="players" Relationship="Self.rosterplayer" FromRole="roster" ToRole="player" />
+        </EntityType>
+        <EntityType Name="team">
+          <Key>
+            <PropertyRef Name="teamid" />
+          </Key>
+          <Property Name="teamid" Type="Int64" Nullable="false" />
+          <Property Name="hltvteamid" Type="Int64" />
+          <Property Name="teamname" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="teamshortname" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="bets" Relationship="Self.FK_bet_1_0" FromRole="team" ToRole="bet" />
+          <NavigationProperty Name="matches" Relationship="Self.FK_match_1_0" FromRole="team" ToRole="match" />
+          <NavigationProperty Name="matches1" Relationship="Self.FK_match_2_0" FromRole="team" ToRole="match" />
+          <NavigationProperty Name="rosters" Relationship="Self.FK_roster_0_0" FromRole="team" ToRole="roster" />
+        </EntityType>
+        <EntityType Name="odd">
+          <Key>
+            <PropertyRef Name="matchid" />
+            <PropertyRef Name="team1odds" />
+            <PropertyRef Name="team2odds" />
+            <PropertyRef Name="sourceid" />
+          </Key>
+          <Property Name="matchid" Type="Int64" Nullable="false" />
+          <Property Name="team1odds" Type="Double" Nullable="false" />
+          <Property Name="team2odds" Type="Double" Nullable="false" />
+          <Property Name="sourceid" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="match" Relationship="Self.FK_odds_1_0" FromRole="odds" ToRole="match" />
+          <NavigationProperty Name="oddssource" Relationship="Self.FK_odds_0_0" FromRole="odds" ToRole="oddssource" />
+        </EntityType>
+        <Association Name="FK_bet_0_0">
+          <End Role="match" Type="Self.match" Multiplicity="1" />
+          <End Role="bet" Type="Self.bet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="match">
+              <PropertyRef Name="matchid" />
+            </Principal>
+            <Dependent Role="bet">
+              <PropertyRef Name="matchid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_bet_1_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="bet" Type="Self.bet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="bet">
+              <PropertyRef Name="teamid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_0_0">
+          <End Role="event" Type="Self.event" Multiplicity="0..1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="event">
+              <PropertyRef Name="eventid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="eventid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_1_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="team2id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_2_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="team1id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_match_3_0">
+          <End Role="matchstatus" Type="Self.matchstatu" Multiplicity="1" />
+          <End Role="match" Type="Self.match" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="matchstatus">
+              <PropertyRef Name="matchstatusid" />
+            </Principal>
+            <Dependent Role="match">
+              <PropertyRef Name="matchstatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_odds_1_0">
+          <End Role="match" Type="Self.match" Multiplicity="1" />
+          <End Role="odds" Type="Self.odd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="match">
+              <PropertyRef Name="matchid" />
+            </Principal>
+            <Dependent Role="odds">
+              <PropertyRef Name="matchid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_odds_0_0">
+          <End Role="oddssource" Type="Self.oddssource" Multiplicity="1" />
+          <End Role="odds" Type="Self.odd" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="oddssource">
+              <PropertyRef Name="sourceid" />
+            </Principal>
+            <Dependent Role="odds">
+              <PropertyRef Name="sourceid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_roster_0_0">
+          <End Role="team" Type="Self.team" Multiplicity="1" />
+          <End Role="roster" Type="Self.roster" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="team">
+              <PropertyRef Name="teamid" />
+            </Principal>
+            <Dependent Role="roster">
+              <PropertyRef Name="teamid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="rosterplayer">
+          <End Role="roster" Type="Self.roster" Multiplicity="*" />
+          <End Role="player" Type="Self.player" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="dbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="bets" EntityType="Self.bet" />
+          <EntitySet Name="events" EntityType="Self.event" />
+          <EntitySet Name="matches" EntityType="Self.match" />
+          <EntitySet Name="matchstatus" EntityType="Self.matchstatu" />
+          <EntitySet Name="oddssources" EntityType="Self.oddssource" />
+          <EntitySet Name="players" EntityType="Self.player" />
+          <EntitySet Name="rosters" EntityType="Self.roster" />
+          <EntitySet Name="teams" EntityType="Self.team" />
+          <EntitySet Name="odds" EntityType="Self.odd" />
+          <AssociationSet Name="FK_bet_0_0" Association="Self.FK_bet_0_0">
+            <End Role="match" EntitySet="matches" />
+            <End Role="bet" EntitySet="bets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_bet_1_0" Association="Self.FK_bet_1_0">
+            <End Role="team" EntitySet="teams" />
+            <End Role="bet" EntitySet="bets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_0_0" Association="Self.FK_match_0_0">
+            <End Role="event" EntitySet="events" />
+            <End Role="match" EntitySet="matches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_1_0" Association="Self.FK_match_1_0">
+            <End Role="team" EntitySet="teams" />
+            <End Role="match" EntitySet="matches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_2_0" Association="Self.FK_match_2_0">
+            <End Role="team" EntitySet="teams" />
+            <End Role="match" EntitySet="matches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_match_3_0" Association="Self.FK_match_3_0">
+            <End Role="matchstatus" EntitySet="matchstatus" />
+            <End Role="match" EntitySet="matches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_odds_1_0" Association="Self.FK_odds_1_0">
+            <End Role="match" EntitySet="matches" />
+            <End Role="odds" EntitySet="odds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_odds_0_0" Association="Self.FK_odds_0_0">
+            <End Role="oddssource" EntitySet="oddssources" />
+            <End Role="odds" EntitySet="odds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_roster_0_0" Association="Self.FK_roster_0_0">
+            <End Role="team" EntitySet="teams" />
+            <End Role="roster" EntitySet="rosters" />
+          </AssociationSet>
+          <AssociationSet Name="rosterplayer" Association="Self.rosterplayer">
+            <End Role="roster" EntitySet="rosters" />
+            <End Role="player" EntitySet="players" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbModelStoreContainer" CdmEntityContainer="dbEntities">
+          <EntitySetMapping Name="bets">
+            <EntityTypeMapping TypeName="dbModel.bet">
+              <MappingFragment StoreEntitySet="bet">
+                <ScalarProperty Name="betid" ColumnName="betid" />
+                <ScalarProperty Name="matchid" ColumnName="matchid" />
+                <ScalarProperty Name="amount" ColumnName="amount" />
+                <ScalarProperty Name="teamid" ColumnName="teamid" />
+                <ScalarProperty Name="datetime" ColumnName="datetime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="events">
+            <EntityTypeMapping TypeName="dbModel.event">
+              <MappingFragment StoreEntitySet="event">
+                <ScalarProperty Name="eventid" ColumnName="eventid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="startdate" ColumnName="startdate" />
+                <ScalarProperty Name="enddate" ColumnName="enddate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="matches">
+            <EntityTypeMapping TypeName="dbModel.match">
+              <MappingFragment StoreEntitySet="match">
+                <ScalarProperty Name="matchid" ColumnName="matchid" />
+                <ScalarProperty Name="matchstatsid" ColumnName="matchstatsid" />
+                <ScalarProperty Name="csgolid" ColumnName="csgolid" />
+                <ScalarProperty Name="team1id" ColumnName="team1id" />
+                <ScalarProperty Name="team2id" ColumnName="team2id" />
+                <ScalarProperty Name="roster1id" ColumnName="roster1id" />
+                <ScalarProperty Name="roster2id" ColumnName="roster2id" />
+                <ScalarProperty Name="matchstatus" ColumnName="matchstatus" />
+                <ScalarProperty Name="winner" ColumnName="winner" />
+                <ScalarProperty Name="datetime" ColumnName="datetime" />
+                <ScalarProperty Name="eventid" ColumnName="eventid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="matchstatus">
+            <EntityTypeMapping TypeName="dbModel.matchstatu">
+              <MappingFragment StoreEntitySet="matchstatus">
+                <ScalarProperty Name="matchstatusid" ColumnName="matchstatusid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="oddssources">
+            <EntityTypeMapping TypeName="dbModel.oddssource">
+              <MappingFragment StoreEntitySet="oddssource">
+                <ScalarProperty Name="sourceid" ColumnName="sourceid" />
+                <ScalarProperty Name="sourcename" ColumnName="sourcename" />
+                <ScalarProperty Name="sourceurl" ColumnName="sourceurl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="players">
+            <EntityTypeMapping TypeName="dbModel.player">
+              <MappingFragment StoreEntitySet="player">
+                <ScalarProperty Name="playerid" ColumnName="playerid" />
+                <ScalarProperty Name="hltvid" ColumnName="hltvid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="hsr" ColumnName="hsr" />
+                <ScalarProperty Name="kdr" ColumnName="kdr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="rosters">
+            <EntityTypeMapping TypeName="dbModel.roster">
+              <MappingFragment StoreEntitySet="roster">
+                <ScalarProperty Name="rosterid" ColumnName="rosterid" />
+                <ScalarProperty Name="teamid" ColumnName="teamid" />
+                <ScalarProperty Name="lastplayed" ColumnName="lastplayed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="teams">
+            <EntityTypeMapping TypeName="dbModel.team">
+              <MappingFragment StoreEntitySet="team">
+                <ScalarProperty Name="teamid" ColumnName="teamid" />
+                <ScalarProperty Name="hltvteamid" ColumnName="hltvteamid" />
+                <ScalarProperty Name="teamname" ColumnName="teamname" />
+                <ScalarProperty Name="teamshortname" ColumnName="teamshortname" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="odds">
+            <EntityTypeMapping TypeName="dbModel.odd">
+              <MappingFragment StoreEntitySet="odds">
+                <ScalarProperty Name="matchid" ColumnName="matchid" />
+                <ScalarProperty Name="team1odds" ColumnName="team1odds" />
+                <ScalarProperty Name="team2odds" ColumnName="team2odds" />
+                <ScalarProperty Name="sourceid" ColumnName="sourceid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="rosterplayer" TypeName="dbModel.rosterplayer" StoreEntitySet="rosterplayer">
+            <EndProperty Name="roster">
+              <ScalarProperty Name="rosterid" ColumnName="rosterid" />
+            </EndProperty>
+            <EndProperty Name="player">
+              <ScalarProperty Name="playerid" ColumnName="playerid" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
