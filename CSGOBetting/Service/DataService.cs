@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CSGOBetting.App_Code;
 using CSGOBetting.APIModels;
+using CSGOBetting.Service;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -30,18 +31,7 @@ namespace CSGOBetting.Service
                 {
                     foreach (CSGOStatsMatch m in matches)
                     {
-                        match matchEntity = (from c in ctx.matches
-                            where c.matchstatsid == m.CSGOlid
-                            select c).SingleOrDefault();
-                        if (matchEntity == null)
-                        {
-                            var newMatch = new match
-                            {
-                                matchstatsid = m.CSGOlid,
-                                csgolid = m.CSGOlid,
-                                datetime = m.Time.ToString("s", System.Globalization.CultureInfo.InvariantCulture)
-                            };
-                        }
+                        match matchEntity = DBService.GetOrCreateMatch(m.CSGOlid, m.Time, m.Team1, m.Team2);
                     }
                 }
 

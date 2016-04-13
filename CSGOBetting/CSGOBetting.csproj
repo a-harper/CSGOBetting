@@ -130,6 +130,7 @@
       <DependentUpon>CSGBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\APIExceptions.cs" />
+    <Compile Include="Exceptions\DataExceptions.cs" />
     <Compile Include="match.cs">
       <DependentUpon>CSGBModel.tt</DependentUpon>
     </Compile>
