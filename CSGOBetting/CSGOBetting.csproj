@@ -107,6 +107,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APIModels\CSGOStatsMatch.cs" />
+    <Compile Include="APIModels\CSGOStatsMatchDetails.cs" />
     <Compile Include="App_Code\Settings.cs" />
     <Compile Include="bet.cs">
       <DependentUpon>CSGBModel.tt</DependentUpon>

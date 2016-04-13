@@ -12,28 +12,32 @@ using Newtonsoft.Json.Linq;
 
 namespace CSGOBetting.Service
 {
+    enum MatchType
+    {
+        Live,
+        Upcoming,
+        Previous
+    }
     static class DataService
     {
-        public static int GetTodaysMatches()
+        public static int GetTodaysMatches(MatchType mt)
         {
             var api = new APIService(Settings.MatchStatsAPIMatches);
             string jsonMatches = api.GetResponse();
             try
             {
                 JObject csgostatsMatches = JObject.Parse(jsonMatches);
-                IList<JToken> results = csgostatsMatches["upcoming"].Children().ToList();
+                IList<JToken> results = csgostatsMatches[mt.ToString().ToLower()].Children().ToList();
 
                 // Serialize
                 IList<CSGOStatsMatch> matches =
                     results.Select(result => JsonConvert.DeserializeObject<CSGOStatsMatch>(result.ToString())).ToList();
 
-                using (var ctx = new dbEntities())
+                foreach (CSGOStatsMatch m in matches)
                 {
-                    foreach (CSGOStatsMatch m in matches)
-                    {
-                        match matchEntity = DBService.GetOrCreateMatch(m.CSGOlid, m.Time, m.Team1, m.Team2);
-                    }
+                    match matchEntity = DBService.GetOrCreateMatch(m.CSGOlid, m.Time, m.Team1, m.Team2, m.Winner);
                 }
+
 
             }
             catch
@@ -41,6 +45,23 @@ namespace CSGOBetting.Service
                 return 0;
             }
             
+            return 1;
+        }
+
+        public static int GetMatchDetails(int matchid)
+        {
+            var api = new APIService(Settings.CSGOLoungeURL + matchid);
+            string jsonMatchDetails = api.GetResponse();
+            try
+            {
+                //JObject csgostatsMatchDetails = JObject.Parse(jsonMatchDetails);
+                var matchDetails =
+                    JsonConvert.DeserializeObject<CSGOStatsMatchDetails>(jsonMatchDetails);
+            }
+            catch
+            {
+                return 0;
+            }
             return 1;
         }
     }
